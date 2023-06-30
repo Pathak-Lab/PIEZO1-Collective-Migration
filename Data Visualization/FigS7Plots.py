@@ -6,7 +6,7 @@ Created on Fri Nov  4 15:12:35 2022
 """
 
 """
-Fig 3 - Figure Supplement 3 Cumming plots
+Fig S7 Cumming plots
 
 Author: Jinghao Chen
 Email: jinghc2@uci.edu
