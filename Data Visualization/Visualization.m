@@ -1,4 +1,4 @@
-% Visualization Script for Fig. 2, 3 
+% Visualization Script for Fig. 2, 3, S2, S3
 % and their respective supplemental figures
 % Jinghao Chen, jinghc2@uci.edu
 
@@ -32,17 +32,17 @@ ylabel('Norm. Edge Length');
 hold off;
 legend('Higher Directionality','Control','Lower Directionality');
 
-%% Fig. 2F and Fig. 2 - Figure supplement 1
+%% Fig. 2F and Fig. S2
 % ensure "parameter study dataset" is in the folder path
 % and edit the folder_path
 clf;
 param = 3;
 % Fig. 2F: 3
-% Fig. 2 - Figure Supplement 1A: 4
-% Fig. 2 - Figure Supplement 1B: 2
-% Fig. 2 - Figure Supplement 1C: 5
-% Fig. 2 - Figure Supplement 1D: 6
-% Fig. 2 - Figure Supplement 1E: 1
+% Fig. S2A: 4
+% Fig. S2B: 2
+% Fig. S2C: 5
+% Fig. S2D: 6
+% Fig. S2E: 1
 
 folder_path = '...\parameter study dataset';% replace ... by the folder path
 
@@ -71,7 +71,7 @@ C = {'rdt','nrdt','mu','alp','d','iso'; ...
 
 DVM([folder_path '\' C{5,param}],[0 param],C);
 
-%% Fig. 2 G, H and Fig. 2 - Figure Supplement 2
+%% Fig. 2 G, H and Fig. S3
 % ensure "parameter study dataset" is in the folder path
 % and edit the folder_path
 clf;
