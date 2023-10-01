@@ -21,18 +21,51 @@ print("We're using DABEST v{}".format(dabest.__version__))
 
 #%% load the data
 
-piezo1_cs = pd.read_excel('.../supp_piezo1_cs.xlsx') # replace ... by the data location
-piezo1_el = pd.read_excel('.../supp_piezo1_el.xlsx') # replace ... by the data location
+file_loc = '/Volumes/Expansion/Data/collective motility'
+
+piezo1_cs = pd.read_excel(file_loc + '/supp_piezo1_cs.xlsx') # replace ... by the data location
+piezo1_el = pd.read_excel(file_loc + '/supp_piezo1_el.xlsx') # replace ... by the data location
+
 
 #%% Option 1: GoF
 
 cs = dabest.load(piezo1_cs,idx=("ControlGoF(SC)", "GoF(SC)","GoF(SC)+Alp","GoF(SC)-Alp"))
 el = dabest.load(piezo1_el,idx=("ControlGoF(SC)", "GoF(SC)","GoF(SC)+Alp","GoF(SC)-Alp"))
 
+#%% Plot the data
+
+f, axx = plt.subplots(nrows=1, ncols=2,
+                        figsize=(14, 7),
+                        gridspec_kw={'wspace': 0.25} # ensure proper width-wise spacing.
+                       )
+
+cs.cohens_d.plot(ax=axx.flat[0],swarm_label="Norm. Closing Speed");
+el.cohens_d.plot(ax=axx.flat[1],swarm_label="Norm. Edge Length");
+
+#%% Save the plots
+
+f.savefig(file_loc + '/figS7_GoF.svg', format='svg') # replace ... by the saving location
+
+
 #%% Option 2: Yoda1
 
 cs = dabest.load(piezo1_cs,idx=("DMSO(SC)", "Yoda1(SC)","Yoda1(SC)+Alp","Yoda1(SC)-Alp"))
 el = dabest.load(piezo1_el,idx=("DMSO(SC)", "Yoda1(SC)","Yoda1(SC)+Alp","Yoda1(SC)-Alp"))
+
+#%% Plot the data
+
+f, axx = plt.subplots(nrows=1, ncols=2,
+                        figsize=(14, 7),
+                        gridspec_kw={'wspace': 0.25} # ensure proper width-wise spacing.
+                       )
+
+cs.cohens_d.plot(ax=axx.flat[0],swarm_label="Norm. Closing Speed");
+el.cohens_d.plot(ax=axx.flat[1],swarm_label="Norm. Edge Length");
+
+#%% Save the plots
+
+f.savefig(file_loc + '/figS7_Yoda1.svg', format='svg') # replace ... by the saving location
+
 
 #%% Option 3: cKo
 
@@ -51,4 +84,4 @@ el.cohens_d.plot(ax=axx.flat[1],swarm_label="Norm. Edge Length");
 
 #%% Save the plots
 
-f.savefig(".../fig3_cKO.svg", format='svg') # replace ... by the saving location
+f.savefig(file_loc + '/figS7_cKO.svg', format='svg') # replace ... by the saving location
