@@ -14,7 +14,7 @@ print("We're using DABEST v{}".format(dabest.__version__))
 
 #%% load the data
 
-file_loc = '/Volumes/Expansion/Data/collective motility'
+file_loc = '/Volumes/Expansion/Data/amereh new model'
 
 temp_loc = input('Current file location: \n'+file_loc+'\n Is that correct? (yes/no): ')
 
@@ -33,8 +33,8 @@ save_opt = input('Please indicate the format of the saved figures (svg/png): ')
 if plot_opt == 'gof' or plot_opt == 'all' or plot_opt == '':
     #%% Option 1: GoF
 
-    cs = dabest.load(piezo1_cs,idx=("ControlGoF(CM)", "GoF(CM)","GoF(CM)+Alp","GoF(CM)-Alp"))
-    el = dabest.load(piezo1_el,idx=("ControlGoF(CM)", "GoF(CM)","GoF(CM)+Alp","GoF(CM)-Alp"))
+    cs = dabest.load(piezo1_cs,idx=("ControlGoF(CM)", "GoF(CM)","GoF(CM)+Mot","GoF(CM)-Mot"))
+    el = dabest.load(piezo1_el,idx=("ControlGoF(CM)", "GoF(CM)","GoF(CM)+Mot","GoF(CM)-Mot"))
 
     #%% Plot the data
 
@@ -49,17 +49,17 @@ if plot_opt == 'gof' or plot_opt == 'all' or plot_opt == '':
     #%% Save the plots
 
     if save_opt == 'png':
-        f.savefig(file_loc + '/figS7_GoF.png', format='png')
+        f.savefig(file_loc + '/figSnew_GoF.png', format='png')
     else:
-        f.savefig(file_loc + '/figS7_GoF.svg', format='svg')
+        f.savefig(file_loc + '/figSnew_GoF.svg', format='svg')
 
 
 
 if plot_opt == 'yoda1' or plot_opt == 'all' or plot_opt == '':
     #%% Option 2: Yoda1
 
-    cs = dabest.load(piezo1_cs,idx=("DMSO(CM)", "Yoda1(CM)","Yoda1(CM)+Alp","Yoda1(CM)-Alp"))
-    el = dabest.load(piezo1_el,idx=("DMSO(CM)", "Yoda1(CM)","Yoda1(CM)+Alp","Yoda1(CM)-Alp"))
+    cs = dabest.load(piezo1_cs,idx=("DMSO(CM)", "Yoda1(CM)","Yoda1(CM)+Mot","Yoda1(CM)-Mot"))
+    el = dabest.load(piezo1_el,idx=("DMSO(CM)", "Yoda1(CM)","Yoda1(CM)+Mot","Yoda1(CM)-Mot"))
 
     #%% Plot the data
 
@@ -74,16 +74,16 @@ if plot_opt == 'yoda1' or plot_opt == 'all' or plot_opt == '':
     #%% Save the plots
 
     if save_opt == 'png':
-        f.savefig(file_loc + '/figS7_Yoda1.png', format='png')
+        f.savefig(file_loc + '/figSnew_Yoda1.png', format='png')
     else:
-        f.savefig(file_loc + '/figS7_Yoda1.svg', format='svg')
+        f.savefig(file_loc + '/figSnew_Yoda1.svg', format='svg')
 
 
 if plot_opt == 'cko' or plot_opt == 'all' or plot_opt == '':
     #%% Option 3: cKo
 
-    cs = dabest.load(piezo1_cs,idx=("ControlcKO(CM)", "cKO(CM)","cKO(CM)+Alp","cKO(CM)-Alp"))
-    el = dabest.load(piezo1_el,idx=("ControlcKO(CM)", "cKO(CM)","cKO(CM)+Alp","cKO(CM)-Alp"))
+    cs = dabest.load(piezo1_cs,idx=("ControlcKO(CM)", "cKO(CM)","cKO(CM)+Mot","cKO(CM)-Mot"))
+    el = dabest.load(piezo1_el,idx=("ControlcKO(CM)", "cKO(CM)","cKO(CM)+Mot","cKO(CM)-Mot"))
 
     #%% Plot the data
 
@@ -98,6 +98,6 @@ if plot_opt == 'cko' or plot_opt == 'all' or plot_opt == '':
     #%% Save the plots
 
     if save_opt == 'png':
-        f.savefig(file_loc + '/figS7_cKO.png', format='png')
+        f.savefig(file_loc + '/figSnew_cKO.png', format='png')
     else:
-        f.savefig(file_loc + '/figS7_cKO.svg', format='svg')
+        f.savefig(file_loc + '/figSnew_cKO.svg', format='svg')
