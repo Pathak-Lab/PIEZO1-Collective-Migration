@@ -1,4 +1,4 @@
-function [y] = adv(ul,ur,uu,ud,uc,params,ret,x,ul2,ur2,uu2,ud2,uc2,alp,s)
+function [y] = advHg(ul,ur,uu,ud,uc,params,ret,x,ul2,ur2,uu2,ud2,uc2,alp,s)
 % advection part, in the conservative form, using 2nd order WENO
 % inputs: left-right-up-down-center
 % corresponding to ud(i,j-1),ud(i,j+1),ud(i-1,j),ud(i+1,j),ud(i,j)
@@ -45,10 +45,10 @@ if params(5) == 1
     
 elseif params(5) == 2
     % H2 model
-    xadv = xdr.*(ur.*(1-urs).*(1-alp.*ur).^3 ...
-        -ul.*(1-uls).*(1-alp.*ul).^3)./(2*params(3));
-    yadv = ydr.*(uu.*(1-uus).*(1-alp.*uu).^3 ...
-        -ud.*(1-uds).*(1-alp.*ud).^3)./(2*params(3));
+    xadv = xdr.*(ur.*(1-urs).*(1-alp.*urs).^3 ...
+        -ul.*(1-uls).*(1-alp.*uls).^3)./(2*params(3));
+    yadv = ydr.*(uu.*(1-uus).*(1-alp.*uus).^3 ...
+        -ud.*(1-uds).*(1-alp.*uds).^3)./(2*params(3));
     
 elseif params(5) == 3
     % P1 model
