@@ -9,7 +9,7 @@ fig_dir = pwd;% folder path to store the plotted figures, default pwd
 
 %% plot setting
 
-mode_plot = 4; % plotting modes:
+mode_plot = 3.1; % plotting modes:
         % 1: 3D morphology
         % 1.1: 3D morphology + wound edges visualization
         % 2: wound edges visualization
@@ -57,12 +57,12 @@ d2 = 1;
 
 l = 0.4;% wound edge threshould (for retraction), default 0.4
 k = 10;% steep level of retraction
-rdt = 0.008;% retraction duration, to Yoda1: /5.8
-nrdt = 0.468*0.002;% inter-retraction duration, to Yoda1: /2.8
+rdt = 0.002;% retraction duration, to Yoda1: /5.8
+nrdt = 0.47*0.002;% inter-retraction duration, to Yoda1: /2.8
 rds = 0;% period standard deviation
 nrds = 0;% period standard deviation
-mu = 30;% retraction strength
-sig = 2;% retraction strength standard deviation
+mu = 20;% retraction strength
+sig = .61*mu;% retraction strength standard deviation
 rt = zeros(1,6);% retraction info container, pre-allocation
 rt(1) = normrnd(mu,sig);% retraction strength info
 rt(2) = 0.2;% retraction band width 0.2
@@ -133,13 +133,6 @@ while t < T
     xav(round(t/dt),1) = mean(egcell(:,1));
     xav(round(t/dt),2) = mean(egcell(:,2));
 
-    % plotting option
-    if dt_plot>0
-        plotfunc(ud,...
-            [mode_plot dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k],...
-            data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir);
-    end
-
     % randomized Dirichlet boundaries option
     if btype == 4
         bc = bdmid(:,min(ct_bd,size(bdmid,2)));
@@ -147,6 +140,13 @@ while t < T
         bc = bdgenerator(h,bdm,bdsd,bdnp);
     end
     
+    % plotting option
+    if dt_plot>0
+        plotfunc(ud,...
+            [mode_plot dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k btype],...
+            data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir,bc);
+    end
+
     % retraction setting
     if ct == rd+nrd % randomly reset retraction data after a period        
         rd = round(normrnd(rdm,rds));% randomize retraction duration
@@ -192,13 +192,13 @@ end
 % some plotting options
 if mode_plot == 2.3 || mode_plot == 2.4
     plotfunc(ud,...
-        [mode_plot+0.01 dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k],...
-        data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir);
+        [mode_plot+0.01 dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k btype],...
+        data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir,bc);
 end
 
 %% summarized plotting [optional]
 
 % mode_plot = 2.9;
 % plotfunc(ud,...
-%     [mode_plot dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k],...
-%     data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt);
+%     [mode_plot dt dt_plot tol t ct rd rd+nrd alp alp_type d d1 d2 l k btype],...
+%     data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir,bc);

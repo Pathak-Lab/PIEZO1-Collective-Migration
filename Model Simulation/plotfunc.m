@@ -1,6 +1,6 @@
-function [] = plotfunc(ud,params,data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir)
+function [] = plotfunc(ud,params,data_wscale,data_egl,data_cellmass,xav,egl,egcell,rt,fig_dir,bc)
 %% simulation visualization
-%   params = [mode_plot dt dt_plot tol t ct prd allprd alp alp_type d d1 d2 l k]
+%   params = [mode_plot dt dt_plot tol t ct prd allprd alp alp_type d d1 d2 l k btype bc]
 % Jinghao Chen, jinghc2@uci.edu
 
 mode_plot = params(1);
@@ -18,6 +18,7 @@ d1 = params(12);
 d2 = params(13);
 l = params(14);
 k = params(15);
+btype = params(16);
 
 
 M = size(ud,1)-1;
@@ -60,7 +61,7 @@ elseif mode_plot == 2 % wound edges visualization
     end
     xlim([0 ll]);
     ylim([0 1]);
-    pause(dt_plot);    
+    pause(dt_plot);
 elseif mode_plot == 2.1 % wound edges visualization on a color map
     clf;
     hold on;
@@ -95,15 +96,15 @@ elseif mode_plot == 2.3 % plot snapshots on the same figure
         disp(round(t/0.08)+1);
         disp(t);
     end
-elseif mode_plot == 2.31 % plot snapshots on the same figure, last one    
-        col = 'rgbcmyk';
-        plot(egcell(:,1),0:h:1,col(floor(t/0.08)+2),egcell(:,2),0:h:1,col(floor(t/0.08)+2));
-        xlim([0 1]);
-        ylim([0 1]);
-        disp(floor(t/0.08)+2);
-        disp(t);
-        hold off;
-elseif mode_plot == 2.4 % plot snapshots on different figures and save   
+elseif mode_plot == 2.31 % plot snapshots on the same figure, last one
+    col = 'rgbcmyk';
+    plot(egcell(:,1),0:h:1,col(floor(t/0.08)+2),egcell(:,2),0:h:1,col(floor(t/0.08)+2));
+    xlim([0 1]);
+    ylim([0 1]);
+    disp(floor(t/0.08)+2);
+    disp(t);
+    hold off;
+elseif mode_plot == 2.4 % plot snapshots on different figures and save
     if mod(round(t/dt),round(0.08/dt)) == 0 || round(t/dt)==round(0.01/dt)
         figure(1);
         clf;
@@ -182,7 +183,7 @@ elseif mode_plot == 2.8 % wound edges + quantified instantaneous cell mass
     ylabel('cell mass');
     pause(dt_plot);
 elseif mode_plot == 2.9 % wound edges + mixed everything + outputs
-    x1 = 0:dt:t-2*dt;    
+    x1 = 0:dt:t-2*dt;
     figure(1);
     clf;
     hold on;
@@ -225,54 +226,10 @@ elseif mode_plot == 2.9 % wound edges + mixed everything + outputs
     disp(['wound closing rate: ' num2str(wcr)]);
 
 elseif mode_plot == 3 || mode_plot == 3.1 % visualization of velocity
-    % tol = tol*0.01;
-    ud(ud<tol) = 0;
-    udx = zeros(size(ud));
-    udy = udx;
-    i = 2:M;
-    j = 2:N;
-    udx(i,j) = (ud(i,j+1)-ud(i,j-1))./(2*h);
-    udy(i,j) = (ud(i+1,j)-ud(i-1,j))./(2*h);
-    udx(:,1) = udx(:,2);
-    udx(:,N+1) = udx(:,N);
-    udy(:,1) = udy(:,2);
-    udy(:,N+1) = udy(:,N);
-    DoR = 2-(1+11*alp)*ud+(8*alp+16*alp^2)*ud.^2-(13*alp^2+7*alp^3)*ud.^3+6*alp^3*ud.^4;
-
-    if alp_type == 1 % H1 model
-        Rmag = rt(1)*(1-ud).*(1-alp*ud);
-    elseif alp_type == 2 % H2 model
-        Rmag = rt(1)*(1-ud).*(1-alp*ud).^3;
-    elseif alp_type == 3 % P1 model
-        Rmag = rt(1)*(1-ud).*(1+alp*ud);
-    elseif alp_type == 4 % P2 model
-        Rmag = rt(1)*(1-ud).*(1+alp*ud).^3;
-    elseif alp_type == 5 % M1 model
-        Rmag = rt(1)*(1-ud).*(1+alp*ud).*(1-alp*ud);
-    elseif alp_type == 6 % M2 model
-        Rmag = rt(1)*(1-ud).*(1+alp*ud).*(1-alp*ud).^2;
-    end
-    
-    plr = 0.5*(1-tanh(k*(ud-l)));
-    Loc = zeros(size(ud));
-
-    i = 2:M;
-    j = 1:N+1;
-    Loc(i,j) = ((ud(i+1,j)>ud(i-1,j)).*fbell(h*(j-1),[0.3*rt(2) rt(3) rt(4)])+...
-    (ud(i+1,j)<=ud(i-1,j)).*fbell(h*(j-1),[0.3*rt(2) rt(3) rt(5)]));
-    
-    xdr = tanh(k.*udx);
-    ydr = tanh(k.*udy);
-    
-    % isotropic mode, DoR need to be modified for anisotropic mode
-    uddx = -d1*d*DoR.*udx+xdr.*Rmag.*plr.*Loc;
-    uddy = -d2*d*DoR.*udy+ydr.*Rmag.*plr.*Loc;
-
-    uddx(ud<tol) = 0;
-    uddy(ud<tol) = 0;
-    
     clf;
-    
+
+    [uddx,uddy] = velocityField(ud,bc,rt,[btype alp alp_type k l d1 d2 d tol]);
+
     hold on;
 
     if mod(ct,allprd) < prd
@@ -294,9 +251,9 @@ elseif mode_plot == 3 || mode_plot == 3.1 % visualization of velocity
     else
         l = quiver(x,y,uddx,uddy);
     end
-    
-    set(l,'Color','w');   
-    set(l,'LineStyle','--');    
+
+    set(l,'Color','w');
+    set(l,'LineStyle','--');
     hold off;
 
     pause(dt_plot);
@@ -305,7 +262,7 @@ elseif mode_plot == 4 % visualization of diffusion over density
     % tol = tol*0.01;
     ud(ud<tol) = 0;
     DoR = 2-(1+11*alp)*ud+(8*alp+16*alp^2)*ud.^2-(13*alp^2+7*alp^3)*ud.^3+6*alp^3*ud.^4;
-    
+
     surf(x,y,DoR);
     xlim([0 1]);
     ylim([0 ll]);
