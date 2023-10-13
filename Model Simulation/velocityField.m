@@ -1,4 +1,4 @@
-function [uddx,uddy] = velocityField(ud,bc,rt,params)
+function [uddx,uddy,uddx0,uddy0] = velocityField(ud,bc,rt,params)
 % velocity field
 % inputs: ud, cell density
 %         bc, boundary condition
@@ -55,7 +55,13 @@ ydr = tanh(k.*udy);
 uddx = -d1*d*DoR.*udx+xdr.*Rmag.*plr.*Loc;
 uddy = -d2*d*DoR.*udy+ydr.*Rmag.*plr.*Loc;
 
+uddx0 = -d1*d*DoR.*udx;
+uddy0 = -d2*d*DoR.*udy;
+
 uddx(ud<tol) = 0;
 uddy(ud<tol) = 0;
+
+uddx0(ud<tol) = 0;
+uddy0(ud<tol) = 0;
 
 end
