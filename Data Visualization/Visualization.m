@@ -1,5 +1,3 @@
-% Visualization Script for Fig. 2, 3 
-% and their respective supplemental figures
 % Jinghao Chen, jinghc2@uci.edu
 
 %% Fig. 2A
@@ -198,9 +196,9 @@ writecell(Ccs,[data_path '/supp_piezo1_cs.xlsx'],'WriteMode','append');
 writecell(Cel,[data_path '/supp_piezo1_el.xlsx'],'WriteMode','append');
 
 
-%% New Supp Fig.
+%% S14 - S17 Fig.
 % Note:
-% the following codes are used for generating dataset for new Fig. (~ Fig. S7)
+% the following codes are used for generating dataset for S14 - S17 Figures
 % the plotting codes are in Python with DABEST package
 % input the data_path by the folder location for data storage
 
@@ -242,64 +240,10 @@ writecell(Ccs,[data_path '/supp_piezo1_cs.xlsx'],'WriteMode','append');
 writecell(Cel,[data_path '/supp_piezo1_el.xlsx'],'WriteMode','append');
 
 
-%% New Supp Fig 
+%% S18 Fig.
 % Retraction robustness test
-% data collection
 
-clear;
-
-data_path = '/Volumes/Expansion/Data/ratio test gof';
-control_path = [data_path,'/controlgof'];
-
-control_alldata = load([control_path '/alldata']);
-control_cs = control_alldata.wcs_mean;
-control_el = control_alldata.ael_mean;
-inidata_temp = load([control_path '/inidata']);
-dt = inidata_temp.dt;
-
-cs = [];
-el = [];
-k = 0;
-
-for i1 = 1:3
-    for i2 = 1:3
-        for i3 = 1:3
-            case_path = [data_path,'/r',num2str(i1),'n',num2str(i2),'s',num2str(i3)];
-            for j = 1:numel(dir([case_path '/data*']))
-                dataA = load([case_path '/data' num2str(j)]);
-                k = k+1;
-                cs(k) = (0.45/(dt*length(dataA.data_wscale)))/control_cs;
-                el(k) = (mean(dataA.data_egl(round(0.5*length(dataA.data_egl)):end)))/control_el;
-            end
-        end
-    end
-end
-
-
-cs_dir = [];
-el_dir = [];
-k = 0;
-
-dr = dir([data_path '/r*dir']);
-N = numel(dr);
-
-for i = 1:N
-    case_path = [data_path,'/',dr(i).name];
-    for j = 1:numel(dir([case_path '/data*']))
-        dataA = load([case_path '/data' num2str(j)]);
-        k = k+1;
-        cs_dir(k) = (0.45/(dt*length(dataA.data_wscale)))/control_cs;
-        el_dir(k) = (mean(dataA.data_egl(round(0.5*length(dataA.data_egl)):end)))/control_el;
-    end
-end
-
-% save the data for future use
-save([data_path,'/ratioTestData'],'cs','cs_dir','el','el_dir');
-disp('Ratio test data save.');
-
-%% New Supp Fig 
-% Retraction robustness test
-% visualization
+data_path = 'G:/Data/ratio test gof';
 
 % load the data
 ratioTestData = load([data_path,'/ratioTestData']);
@@ -307,37 +251,116 @@ cs = ratioTestData.cs;
 cs_dir = ratioTestData.cs_dir;
 el = ratioTestData.el;
 el_dir = ratioTestData.el_dir;
+cs_a1 = ratioTestData.cs_a1;
+cs_a3 = ratioTestData.cs_a3;
+el_a1 = ratioTestData.el_a1;
+el_a3 = ratioTestData.el_a3;
+
+pt = 4;% number of errorbars
+font_size = 13;% text font size
+marker_size = 5;
+line_width = 2;
 
 % plot wound closure
 figure(1);
 clf;
-plot([-1,4],[1,1],'--',LineWidth=3);
+subplot(1,2,1);
+% clf;
+plot([-1,pt+1],[1,1],'b--',LineWidth=line_width);
 hold on;
-errorbar([mean(cs),mean(cs_dir)],[std(cs),std(cs_dir)],'o',LineWidth=3,MarkerSize=10);
-xlim([0,3]);
-xticks([1,2]);
-xticklabels({'^{CM}GoF','^{CM}GoF+↓Dir.'});
-ylim([0,1.1]);
+errorbar([mean(cs),mean(cs_dir),mean(cs_a1),mean(cs_a3)],[std(cs),std(cs_dir),std(cs_a1),std(cs_a3)],'o',LineWidth=line_width,MarkerSize=marker_size,Color='r');
+xlim([0,pt+1]);
+xticks(1:pt);
+xticklabels({'^{CM}GoF','^{CM}GoF+↓Cor.Dir.','^{CM}GoF+↓Adh.','^{CM}GoF+↑Adh.'});
+% ylim([0,1.1]);
 ylabel('Norm. Wound Closure');
-text(2.4,0.95,'Control_{GoF}','FontSize', 15);
+text(pt,0.95,'Control_{GoF}','FontSize', font_size);
 ax = gca;
-ax.XAxis.FontSize = 15;
-ax.YAxis.FontSize = 15;
+ax.XAxis.FontSize = font_size;
+ax.YAxis.FontSize = font_size;
+box off;
+annotation('textbox', [0.06, 1, 0, 0], 'string', '(A)','FontSize', font_size+1);
 hold off;
 
 % plot edge length
-figure(2);
-clf;
-plot([-1,4],[1,1],'--',LineWidth=3);
+subplot(1,2,2);
+% clf;
+plot([-1,pt+1],[1,1],'b--',LineWidth=line_width);
 hold on;
-errorbar([mean(el),mean(el_dir)],[std(el),std(el_dir)],'o',LineWidth=3,MarkerSize=10);
-xlim([0,3]);
-xticks([1,2]);
-xticklabels({'^{CM}GoF','^{CM}GoF+↓Dir.'});
+errorbar([mean(el),mean(el_dir),mean(el_a1),mean(el_a3)],[std(el),std(el_dir),std(el_a1),std(el_a3)],'o',LineWidth=line_width,MarkerSize=marker_size,Color='r');
+xlim([0,pt+1]);
+xticks(1:pt);
+xticklabels({'^{CM}GoF','^{CM}GoF+↓Cor.Dir.','^{CM}GoF+↓Adh.','^{CM}GoF+↑Adh.'});
 % ylim([0,1.1]);
 ylabel('Norm. Edge Length');
-text(2.45,1.03,'Control_{GoF}','FontSize', 15);
+text(pt,1.03,'Control_{GoF}','FontSize', font_size);
 ax = gca;
-ax.XAxis.FontSize = 15;
-ax.YAxis.FontSize = 15;
+ax.XAxis.FontSize = font_size;
+ax.YAxis.FontSize = font_size;
+box off;
+annotation('textbox', [0.5, 1, 0, 0], 'string', '(B)','FontSize', font_size+1);
 hold off;
+
+% save
+% saveas(1,'C:\Users\cjh_m\Desktop\...\231211_new_supp_figures\S18_Fig_test.svg');
+% f = gcf;
+% exportgraphics(f,'C:\Users\cjh_m\Desktop\...\231211_new_supp_figures\S18_Fig_test.png','Resolution',500);
+
+%% S19 Fig.
+% phenotype = 'cKO' for S19B
+% phenotype = 'GoF' for S19D
+
+phenotype = 'cKO';
+
+if strcmp(phenotype,'GoF')
+    control_location = ['C:\Users\cjh_m\Desktop\...\' ...
+        '231215_front_test\231215_controlgof_mix_controlgof'];
+    load_location = ['C:\Users\cjh_m\Desktop\...\' ...
+        '231215_front_test\231215_controlgof_mix_gof'];
+    phenotype_control = 'Control_{GoF}';
+else
+    control_location = ['C:\Users\cjh_m\Desktop\...\' ...
+        '231215_front_test\231215_controlcko_mix_controlcko'];
+    if strcmp(phenotype,'cKO')
+        load_location = ['C:\Users\cjh_m\Desktop\...\' ...
+            '231215_front_test\231215_controlcko_mix_cko'];
+        phenotype_control = 'Control_{cKO}';
+    else
+        load_location = ['C:\Users\cjh_m\Desktop\...\' ...
+            '231215_front_test\231215_dmso_mix_yoda1'];
+        phenotype_control = 'DMSO';
+    end
+end
+
+control_data = load(control_location);
+load(load_location);
+save_location = ['C:\Users\cjh_m\Desktop\...\' ...
+    '231215_front_test\' phenotype];
+
+% 231215 initialization
+sp = 1:-0.1:0; % source percentage
+x_label = 'v cells Percentage in Initial and Source Cells';
+y_label = 'v cells Percentage in Edge Cells';
+font_size = 14;
+
+% visualization
+l_test = 0.2;
+
+l_idx = round(l_test/0.01);
+figure(1);
+clf;
+hold on;
+plot(0:0.1:1,0:0.1:1,'--b',LineWidth=1);
+errorbar(sp,1-wrp_test_average_mean(l_idx,:),wrp_test_average_sem(l_idx,:),LineWidth=2,Color='r');
+errorbar(sp,1-control_data.wrp_test_average_mean(l_idx,:),control_data.wrp_test_average_sem(l_idx,:),LineWidth=2,Color=[.5 .5 .5]);
+ax = gca;
+ax.FontSize = font_size;
+xlabel(x_label,"FontSize",font_size);
+ylabel(y_label,"FontSize",font_size);
+leg1 = legend('y=x line',[phenotype_control ' (u) mix ' phenotype ' (v)'], ...
+        [phenotype_control ' (u) mix ' phenotype_control ' (v)'],'Location','northwest');
+set(leg1,'Box','off')
+hold off;
+f = gcf;
+exportgraphics(f,[save_location '\' phenotype '_front_test_fig_finalized.png'],'Resolution',500);
+% saveas(1,[save_location '\' phenotype '_front_test_fig' num2str(l_idx) '.png']);
