@@ -35,6 +35,6 @@
 ### Scripts
 * MainHg.m: model tuning, testing, visualization
 ### Numerical PDE Solvers
-* iterHg.m: numerical scheme, one step iteration
+* iterHgInd.m: numerical scheme, one step iteration
 * difHg.m: numerical scheme, diffusion
 * advHg.m: numerical scheme, advection
