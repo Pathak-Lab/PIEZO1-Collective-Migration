@@ -346,7 +346,7 @@ while t < T
     rt1(6) = (ct < rd)&&(t > Tr);
     rt2(6) = (ct < rd)&&(t > Tr);
 
-    [ud1,ud2] = iterHg(ud1,ud2,params1,params2,pp*bc,(1-pp)*bc,rt1,rt2,alp_inter);
+    [ud1,ud2] = iterHgInd(ud1,ud2,params1,params2,pp*bc,(1-pp)*bc,rt1,rt2,alp_inter);
     
     ct = ct+1;
     ct_bd = ct_bd+1;
